@@ -1,10 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'shopapp/base.html' %}
 
-</body>
-</html>
+{% block title %}
+    Shop Index
+{% endblock %}
+
+{% block body %}
+    <h1>Hello shop Index</h1>
+
+    <div>
+        Time running: {{ time_running }}
+    </div>
+
+    <div>
+        {% lorem 3 p %}
+    </div>
+
+{% endblock %}
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Shop index</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Hello Shop Index</h1>-->
+
+<!--<div>-->
+<!--    Time running: {{time_running}}-->
+<!--</div>-->
+
+<!--<div>-->
+<!--    {% lorem 3 p random %}-->
+<!--</div>-->
+
+<!--</body>-->
+<!--</html>-->
