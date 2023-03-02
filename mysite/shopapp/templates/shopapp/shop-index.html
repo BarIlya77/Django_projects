@@ -8,6 +8,24 @@
     <h1>Hello shop Index</h1>
 
     <div>
+        <h2>Spisok</h2>
+        <ul>
+            {% for name, price in products %}
+                <li>{{ name }} {{ name|length }} for ${{ price }}</li>
+                {% if name|length_is:'7' %}
+                    <span>Lucky products</span>
+                {% endif %}
+                {% if price < 2000 %}
+                    <span>Good price</span>
+                {% endif %}
+{#                <span>{{ name|length_is:'7' }}</span>#}
+            {% empty %}
+                No products here
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div>
         Time running: {{ time_running }}
     </div>
 

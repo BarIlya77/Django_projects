@@ -12,5 +12,14 @@
 {% block body %}
   base body
 {% endblock %}
+
+<div>
+    {% now 'H:i' %}
+</div>
+<div>
+    {% now 'l' as currient_weekday %}
+    Today is {{ currient_weekday }}
+</div>
+
 </body>
 </html>
