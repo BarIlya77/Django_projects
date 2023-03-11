@@ -1,0 +1,28 @@
+{% extends 'requestdataapp/base.html' %}
+
+{% block title %}
+    User BIO
+{% endblock %}
+
+{% block body %}
+    <h1>User form</h1>
+    <div>
+        <form method="post">
+
+            <p>
+                <lable for="name-id">Full name</lable>
+                <input id="name-id" type="text" maxlength="100">
+            </p>
+
+            <p>
+                <lable for="age">Age</lable>
+                <input id="age" type="number" min="99">
+            </p>
+
+            <button type="submit">
+                Submit
+            </button>
+
+        </form>
+    </div>
+{% endblock %}
