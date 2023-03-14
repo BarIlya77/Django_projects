@@ -28,13 +28,26 @@ class CountRequestsMiddleware:
     def __call__(self, request: HttpRequest):
         self.requests_count += 1
         print('requests count', self.requests_count)
-        if request.META['REMOTE_ADDR'] in self.requests_dict:
-            delta = int(((datetime.now() - self.requests_dict[request.META['REMOTE_ADDR']]).total_seconds() % 3600)//60)
-            print(f'\nThe previous request was made {delta} min. ago.\n')
-            if delta < 1:
-                return HttpResponse('Too many requests per hour!')
-        self.requests_dict[request.META['REMOTE_ADDR']] = datetime.now()
-        # print(self.requests_dict)
+
+        self.requests_dict[request.META['REMOTE_ADDR']] = self.requests_dict.get(request.META['REMOTE_ADDR'], [])
+
+        # print('\n1', self.requests_dict[request.META['REMOTE_ADDR']])
+        self.requests_dict[request.META['REMOTE_ADDR']].append(datetime.now())
+
+        first_request_time = self.requests_dict[request.META['REMOTE_ADDR']][0]
+        time_delta = ((datetime.now() - first_request_time).total_seconds() % 3600) // 60
+        print(time_delta)
+        if time_delta > 10:
+            self.requests_dict[request.META['REMOTE_ADDR']] = self.requests_dict[request.META['REMOTE_ADDR']][1:]
+
+        requests_per_time = len(self.requests_dict[request.META['REMOTE_ADDR']])
+        print('number of requests is', requests_per_time)
+        # print('\n2', self.requests_dict[request.META['REMOTE_ADDR']])
+
+        if requests_per_time > 20:
+            return HttpResponse('Too many requests in 10 minutes!')
+            # return HttpResponse('Too many requests per hour!')
+
         response = self.get_response(request)
         self.responses_count += 1
         print('response count', self.responses_count)
