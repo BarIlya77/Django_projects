@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 
 from django.db import models
 
-# Create your models here.
+
 class Product(models.Model):
     class Meta:
         ordering = ['name', 'price']
@@ -24,6 +24,7 @@ class Product(models.Model):
 
     def __str__(self) -> str:
         return f'Product(pk={self.pk}, name={self.name!r})'
+
 
 class Order(models.Model):
     delivery_address = models.TextField(null=True, blank=True)
