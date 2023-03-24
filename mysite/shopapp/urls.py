@@ -3,9 +3,6 @@ from django.urls import path
 from .views import (
     ShopIindexView,
     GroupsListView,
-    # products_list,
-    # orders_list,
-    # create_product,
     create_order,
     ProductDetailsView,
     ProductListView,
