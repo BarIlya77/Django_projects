@@ -44,7 +44,7 @@ class CountRequestsMiddleware:
         print('number of requests is', requests_per_time)
         # print('\n2', self.requests_dict[request.META['REMOTE_ADDR']])
 
-        if requests_per_time > 20:
+        if requests_per_time > 100:
             return HttpResponse('Too many requests in 10 minutes!')
             # return HttpResponse('Too many requests per hour!')
 
