@@ -2,12 +2,12 @@ from timeit import default_timer
 
 from django.contrib.auth.models import Group
 from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
-from django.shortcuts import render, redirect, reverse, get_object_or_404
+from django.shortcuts import render, redirect, reverse
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
-
-from .forms import ProductForm, OrderForm, GroupForm
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from .forms import OrderForm, GroupForm
 from .models import Product, Order
 
 
@@ -53,13 +53,25 @@ class ProductListView(ListView):
     queryset = Product.objects.filter(archived=False)
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(PermissionRequiredMixin, CreateView):
+    permission_required = 'shopapp.add_product'
     model = Product
     fields = 'name', 'price', 'description', 'discount'
     success_url = reverse_lazy('shopapp:products_list')
 
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
 
-class ProductUpdateView(UpdateView):
+
+class ProductUpdateView(UserPassesTestMixin, UpdateView):
+    print('hello')
+    print(Product.objects)
+
+    def test_func(self):
+        if self.model.created_by == self.request.user or self.request.user.is_superuser:
+            return True
+        return False
     model = Product
     fields = 'name', 'price', 'description', 'discount'
     template_name_suffix = '_update_form'
@@ -110,18 +122,23 @@ class ProductDeleteView(DeleteView):
         return HttpResponseRedirect(success_url)
 
 
-class OrdersListView(ListView):
-    template_name = 'shopapp/order-list.html'
-    model = Order
-    context_object_name = 'orders'
-
-
 class OrderDeleteView(DeleteView):
     model = Order
     success_url = reverse_lazy('shopapp:orders_list')
 
 
-class OrderDetailView(DetailView):
-    template_name = 'shopapp/order-details.html'
-    model = Order
-    context_object_name = 'object'
+class OrdersListView(LoginRequiredMixin, ListView):
+    queryset = (
+        Order.objects
+        .select_related("user")
+        .prefetch_related("products")
+    )
+
+
+class OrderDetailView(PermissionRequiredMixin, DetailView):
+    permission_required = 'shopapp.view_order'
+    queryset = (
+        Order.objects
+        .select_related("user")
+        .prefetch_related("products")
+    )

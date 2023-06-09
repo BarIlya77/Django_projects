@@ -21,4 +21,9 @@
   <div>
     <a href="{% url 'shopapp:products_list' %}">Back to products list</a>
   </div>
+  <div>
+    <p>Created by: {{ product.created_by_id }} </p>
+    <p>user name: {{ user.username }} </p>
+    <p>user id: {{ user.id }} </p>
+  </div>
 {% endblock %}
