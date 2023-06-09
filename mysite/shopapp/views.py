@@ -69,7 +69,7 @@ class ProductUpdateView(UserPassesTestMixin, UpdateView):
     print(Product.objects)
 
     def test_func(self):
-        if self.model.created_by == self.request.user or self.request.user.is_superuser:
+        if self.get_object().created_by == self.request.user or self.request.user.is_superuser:
             return True
         return False
     model = Product
