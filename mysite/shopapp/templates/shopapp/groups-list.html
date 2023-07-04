@@ -5,10 +5,7 @@
 {% endblock %}
 
 {% block body %}
-  <h2>Groups:</h2>
-{#  <div>#}
-{#  {{ groups }}#}
-{#  </div>#}
+  <h1>Groups:</h1>
   <div>
     <form method="post">
       {% csrf_token %}
@@ -23,19 +20,18 @@
     <ul>
 
       {% for group in groups %}
-        <li>
-          {{ group.name }}
-{#          <h3>permissions</h3>#}
-          <ul>
-            {% for permission in group.permissions.all %}
-              <li>
-                {{ permission.name }}
-                (<code>{{ permission.codename }}</code>)
-              </li>
-            {% endfor %}
-          </ul>
-{#          {{ group.permissions.all }}#}
-        </li>
+          <li>
+            <div>{{ group.name }}</div>
+            <ul>
+              {% for permission in group.permissions.all %}
+                <li>
+                  {{ permission.name }}
+                  (<code>{{ permission.codename }}</code>)
+                </li>
+              {% endfor %}
+
+            </ul>
+          </li>
       {% endfor %}
 
     </ul>

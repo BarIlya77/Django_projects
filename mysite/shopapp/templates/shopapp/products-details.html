@@ -8,22 +8,17 @@
   <h1>Product <strong>{{ product.name }}</strong></h1>
   <div>
     <div>Description: <em>{{ product.description }}</em></div>
-    <div>Price: <em>{{ product.price }}</em></div>
-    <div>Discount: <em>{{ product.discount }}</em></div>
-    <div>Archived: <em>{{ product.archived }}</em></div>
+    <div>Price: {{ product.price }}</div>
+    <div>Discount: {{ product.discount }}</div>
+    <div>Archived: {{ product.archived }}</div>
   </div>
   <div>
     <a href="{% url 'shopapp:product_update' pk=product.pk %}">Update product</a>
   </div>
   <div>
-    <a href="{% url 'shopapp:product_delete' pk=product.pk %}">Archived product</a>
+    <a href="{% url 'shopapp:product_delete' pk=product.pk %}">Archive product</a>
   </div>
   <div>
     <a href="{% url 'shopapp:products_list' %}">Back to products list</a>
-  </div>
-  <div>
-    <p>Created by: {{ product.created_by_id }} </p>
-    <p>user name: {{ user.username }} </p>
-    <p>user id: {{ user.id }} </p>
   </div>
 {% endblock %}

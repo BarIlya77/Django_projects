@@ -5,25 +5,26 @@
 {% endblock %}
 
 {% block body %}
-  <h2>Products:</h2>
+  <h1>Products:</h1>
   {% if products %}
     <div>
     {% for product in products %}
       <div>
-        <p><a href="{% url 'shopapp:product_details' pk=product.pk %}">Name: {{ product.name }}</a></p>
+        <p><a href="{% url 'shopapp:product_details' pk=product.pk %}"
+        >Name: {{ product.name }}</a></p>
         <p>Price: {{ product.price }}</p>
         <p>Discount: {% firstof product.discount 'no discount' %}</p>
       </div>
-
     {% endfor %}
+
     </div>
+
   {% else %}
     <h3>No products yet</h3>
   {% endif %}
-  <hr />
-  {% if perms.shopapp.add_product %}
-    <div>
-      <a href="{% url 'shopapp:product_create' %}">Create a new product</a>
-    </div>
-  {% endif %}
+
+  <div>
+    <a href="{% url 'shopapp:product_create' %}"
+      >Create a new product</a>
+  </div>
 {% endblock %}

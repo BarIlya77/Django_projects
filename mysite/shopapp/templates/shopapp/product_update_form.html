@@ -13,7 +13,8 @@
       <button type="submit">Update</button>
     </form>
   </div>
-    <div>
-    <a href="{% url 'shopapp:product_details' pk=object.pk %}">Back to product #{{ object.pk }}</a>
+  <div>
+    <a href="{% url 'shopapp:product_details' pk=object.pk %}"
+    >Back to product #{{ object.pk }}</a>
   </div>
 {% endblock %}

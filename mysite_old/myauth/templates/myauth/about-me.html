@@ -1,0 +1,32 @@
+{% extends 'myauth/base.html' %}
+
+{% block title %}
+  About me
+{% endblock %}
+
+{% block body %}
+  <h1>User info</h1>
+  {% if user.is_authenticated %}
+    <h2>Datail</h2>
+    <p>Username: {{ user.username }}</p>
+    <p>User_id: {{ user.id }}</p>
+    <p>First name: {{ user.first_name }}</p>
+    <p>Last name: {{ user.last_name }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>Bio: {{ user.profile.bio }}</p>
+    <p>Permissions: {{ user.profile.user_id }}</p>
+    <p>Group: {{ user.group_id }}</p>
+    <p>Shop: {{ user.shop_up.add_product }}</p>
+{#    <p>Permissions: {{ user.user.permissions.id main.auth_user_user_permissions}}</p>#}
+{#    {% for permission in permissions %}#}
+{#        <li>! {{ permission.as_p }} !</li>#}
+{#    {% endfor %}#}
+    {% if perms.shopapp.add_product %}
+        sdafsdfdsf
+    {% endif %}
+    <p>Permissions: {{ perms.shopapp }}</p>
+    <p>Permissions: {{ permissions }}</p>
+  {% else %}
+    <h2>User is anonymous</h2>
+  {% endif %}
+{% endblock %}

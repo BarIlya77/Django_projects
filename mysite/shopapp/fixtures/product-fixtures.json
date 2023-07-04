@@ -1,0 +1,122 @@
+[
+  {
+    "model": "shopapp.product",
+    "pk": 2,
+    "fields": {
+      "name": "Laptop",
+      "description": "",
+      "price": "1999.00",
+      "discount": 0,
+      "created_at": "2023-03-03T11:05:38.142Z",
+      "archived": true
+    }
+  },
+  {
+    "model": "shopapp.product",
+    "pk": 3,
+    "fields": {
+      "name": "Desktop",
+      "description": "",
+      "price": "2599.00",
+      "discount": 10,
+      "created_at": "2023-03-03T11:05:38.142Z",
+      "archived": true
+    }
+  },
+  {
+    "model": "shopapp.product",
+    "pk": 4,
+    "fields": {
+      "name": "Smartphone",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur dolores eaque molestiae, quam ratione reprehenderit! Corporis cumque deleniti ea inventore minus modi nesciunt odit perspiciatis possimus, quam sapiente sit tenetur.",
+      "price": "987.00",
+      "discount": 25,
+      "created_at": "2023-03-03T11:05:38.142Z",
+      "archived": false
+    }
+  },
+  {
+    "model": "shopapp.product",
+    "pk": 5,
+    "fields": {
+      "name": "Tablet",
+      "description": "great tablet",
+      "price": "1234.00",
+      "discount": 0,
+      "created_at": "2023-03-16T08:11:51.962Z",
+      "archived": false
+    }
+  },
+  {
+    "model": "shopapp.product",
+    "pk": 7,
+    "fields": {
+      "name": "Phone",
+      "description": "Great great phone",
+      "price": "4567.00",
+      "discount": 0,
+      "created_at": "2023-03-16T08:37:31.511Z",
+      "archived": false
+    }
+  },
+  {
+    "model": "shopapp.product",
+    "pk": 8,
+    "fields": {
+      "name": "Phone 3",
+      "description": "New phone",
+      "price": "12345.00",
+      "discount": 10,
+      "created_at": "2023-03-19T12:02:24.558Z",
+      "archived": false
+    }
+  },
+  {
+    "model": "shopapp.product",
+    "pk": 11,
+    "fields": {
+      "name": "Phone 2",
+      "description": "Some phone",
+      "price": "999.00",
+      "discount": 10,
+      "created_at": "2023-03-21T13:21:38.677Z",
+      "archived": true
+    }
+  },
+  {
+    "model": "shopapp.product",
+    "pk": 13,
+    "fields": {
+      "name": "Phone 13.04",
+      "description": "Created at 13.04.2023",
+      "price": "999.00",
+      "discount": 10,
+      "created_at": "2023-04-13T08:39:33.128Z",
+      "archived": false
+    }
+  },
+  {
+    "model": "shopapp.product",
+    "pk": 14,
+    "fields": {
+      "name": "Some NEW product",
+      "description": "special new product",
+      "price": "1000.00",
+      "discount": 20,
+      "created_at": "2023-05-31T09:33:30.019Z",
+      "archived": false
+    }
+  },
+  {
+    "model": "shopapp.product",
+    "pk": 15,
+    "fields": {
+      "name": "GameTaps",
+      "description": "New easy game",
+      "price": "1.00",
+      "discount": 0,
+      "created_at": "2023-06-07T12:56:52.296Z",
+      "archived": false
+    }
+  }
+]
