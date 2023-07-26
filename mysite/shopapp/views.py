@@ -83,11 +83,24 @@ class OrderDetailView(PermissionRequiredMixin, DetailView):
     )
 
 
-# class OrdersDataExportView(View):
+class ProductsDataExportView(View):
+    def get(self, request: HttpRequest) -> JsonResponse:
+        products = Product.objects.order_by("pk").all()
+        products_data = [
+            {
+                "pk": product.pk,
+                "name": product.name,
+                "price": product.price,
+                "archived": product.archived,
+            }
+            for product in products
+        ]
+        return JsonResponse({"products": products_data})
+
+
 class OrdersDataExportView(UserPassesTestMixin, View):
     def test_func(self):
         return self.request.user.is_staff
-
     def get(self, request: HttpRequest) -> JsonResponse:
         orders = Order.objects.all()
         orders_data = [
@@ -101,4 +114,3 @@ class OrdersDataExportView(UserPassesTestMixin, View):
             for order in orders
         ]
         return JsonResponse({'orders': orders_data})
-

@@ -1,11 +1,11 @@
 from timeit import default_timer
 
-from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
+from django.http import HttpResponse, HttpRequest, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, reverse
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 
 from .models import Product, Order
 
@@ -81,3 +81,24 @@ class OrderDetailView(PermissionRequiredMixin, DetailView):
         .select_related("user")
         .prefetch_related("products")
     )
+
+
+# class OrdersDataExportView(View):
+class OrdersDataExportView(UserPassesTestMixin, View):
+    def test_func(self):
+        return self.request.user.is_staff
+
+    def get(self, request: HttpRequest) -> JsonResponse:
+        orders = Order.objects.all()
+        orders_data = [
+            {# ID заказа, адрес, промокод, ID пользователя, список ID продуктов
+                'ID': order.id,
+                'address': order.delivery_address,
+                'promo': order.promocode,
+                'user': order.user_id,
+                'products': order.products
+            }
+            for order in orders
+        ]
+        return JsonResponse({'orders': orders_data})
+

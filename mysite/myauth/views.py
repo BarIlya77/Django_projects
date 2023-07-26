@@ -1,17 +1,63 @@
 from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import User
+# from django.shortcuts import reverse
+
+from django.shortcuts import get_object_or_404
+from django.urls import reverse
+
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LogoutView
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.contrib.auth import authenticate, login
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import TemplateView, CreateView
+from django.views.generic import TemplateView, CreateView, UpdateView, ListView, DetailView
 
 from .models import Profile
 
 
 class AboutMeView(TemplateView):
     template_name = "myauth/about-me.html"
+
+
+class PhotoUpdateView(UpdateView):
+    model = Profile
+    fields = ["avatar"]
+    template_name = "myauth/photo-update.html"
+    success_url = reverse_lazy("myauth:about-me")
+
+    def get_object(self, queryset=None):
+        user = self.request.user.profile
+        # profile, created = Profile.objects.get_or_create(user=user)
+        return user
+
+
+class UserInfoView(DetailView):
+    template_name = "myauth/user-info.html"
+    model = User
+    context_object_name = "user"
+
+
+class UserUpdateView(UserPassesTestMixin, UpdateView):
+    def test_func(self):
+        return self.request.user.is_staff or self.request.user.id == self.get_object().user.id
+    model = Profile
+    fields = "bio", "agreement_accepted", "agreement_accepted", "avatar"
+    template_name_suffix = "_update_form"
+    # template_name = "myauth/profile_update_form.html"
+
+    def get_success_url(self):
+        return reverse(
+            "myauth:user-info",
+            kwargs={"pk": self.object.user.pk},
+        )
+
+
+class UsersListView(ListView):
+    template_name = "myauth/users_list.html"
+    model = User
+    context_object_name = "users"
 
 
 class RegisterView(CreateView):
@@ -60,6 +106,7 @@ def get_session_view(request: HttpRequest) -> HttpResponse:
     value = request.session.get("foobar", "default")
     return HttpResponse(f"Session value: {value!r}")
 
+
 class FooBarView(View):
     def get(self, request: HttpRequest) -> JsonResponse:
-        return JsonResponse({'foo': 'bar', 'spam': 'eggs'})
+        return JsonResponse({"foo": "bar", "spam": "eggs"})
