@@ -23,77 +23,94 @@ class ProductCreateViewTestCase(TestCase):
 
     def test_create_product(self):
         response = self.client.post(
-            reverse("shopapp:product_create"),
+            reverse('shopapp:product_create'),
             {
+
                 "name": self.product_name,
                 "price": "123.45",
-                "description": "A good table",
-                "discount": "10",
+                "description": "product description",
+                "discount": 10,
             }
         )
-        self.assertRedirects(response, reverse("shopapp:products_list"))
+        self.assertRedirects(response, reverse('shopapp:products_list'))
         self.assertTrue(
             Product.objects.filter(name=self.product_name).exists()
         )
 
 
-class ProductDetailsViewTestCase(TestCase):
+class ProductDetailsTestCase(TestCase):
+
     @classmethod
     def setUpClass(cls):
+        # будет выполнено перед всеми тестами в классе
         cls.product = Product.objects.create(name="Best Product")
 
     @classmethod
     def tearDownClass(cls):
+        # будет выполнено после всех тестов в классе
         cls.product.delete()
+
+    # def setUp(self):
+    #     # будет выполнено перед каждым тестом
+    #     self.product = Product.objects.create(name="Best Product")
+    #
+    # def tearDown(self):
+    #     # будет выполнено после каждого теста
+    #     self.product.delete()
 
     def test_get_product(self):
         response = self.client.get(
-            reverse("shopapp:product_details", kwargs={"pk": self.product.pk})
+            reverse(
+                'shopapp:product_details',
+                kwargs={"pk": self.product.pk},
+            ),
         )
         self.assertEqual(response.status_code, 200)
 
-    def test_get_product_and_check_content(self):
+    def test_get_product_and_check_links(self):
         response = self.client.get(
-            reverse("shopapp:product_details", kwargs={"pk": self.product.pk})
+            reverse(
+                'shopapp:product_details',
+                kwargs={"pk": self.product.pk},
+            ),
         )
         self.assertContains(response, self.product.name)
 
 
-class ProductsListViewTestVase(TestCase):
+class ProductsListTestCase(TestCase):
     fixtures = [
         'products-fixture.json',
     ]
 
     def test_products(self):
-        response = self.client.get(reverse("shopapp:products_list"))
+        response = self.client.get(reverse('shopapp:products_list'))
         self.assertQuerysetEqual(
             qs=Product.objects.filter(archived=False).all(),
-            values=(p.pk for p in response.context["products"]),
+            values=(p.pk for p in response.context['products']),
             transform=lambda p: p.pk,
         )
         self.assertTemplateUsed(response, 'shopapp/products-list.html')
 
 
 class OrdersListViewTestCase(TestCase):
-
     @classmethod
     def setUpClass(cls):
-        cls.user = User.objects.create_user(username="bob_test", password="qwerty")
+        cls.user = User.objects.create_user(username='test', password='test')
 
     @classmethod
     def tearDownClass(cls):
         cls.user.delete()
 
-    def setUp(self) -> None:
+    def setUp(self):
         self.client.force_login(self.user)
 
     def test_orders_view(self):
-        response = self.client.get(reverse("shopapp:orders_list"))
-        self.assertContains(response, "Orders")
+        response = self.client.get(reverse('shopapp:orders_list'))
+        self.assertContains(response, 'Orders')
 
     def test_orders_view_not_authenticated(self):
         self.client.logout()
-        response = self.client.get(reverse("shopapp:orders_list"))
+        response = self.client.get(reverse('shopapp:orders_list'))
         self.assertEqual(response.status_code, 302)
         self.assertIn(str(settings.LOGIN_URL), response.url)
 
@@ -104,11 +121,9 @@ class ProductsExportViewTestCase(TestCase):
     ]
 
     def test_get_products_view(self):
-        response = self.client.get(
-            reverse("shopapp:products-export"),
-        )
+        response = self.client.get(reverse('shopapp:products-export'))
         self.assertEqual(response.status_code, 200)
-        products = Product.objects.order_by("pk").all()
+        products = Product.objects.order_by('pk').all()
         expected_data = [
             {
                 "pk": product.pk,

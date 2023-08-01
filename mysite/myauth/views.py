@@ -13,8 +13,27 @@ from django.contrib.auth import authenticate, login
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, CreateView, UpdateView, ListView, DetailView
+from django.utils.translation import gettext_lazy as _, ngettext
 
 from .models import Profile
+
+
+class HelloView(View):
+    message_text = _('welcome hello world!')
+
+    def get(self, request: HttpRequest) -> HttpResponse:
+        items_str = request.GET.get("items") or 0
+        items = int(items_str)
+        products_line = ngettext(
+            "one product",
+            "{count} products",
+            items,
+        )
+        products_line = products_line.format(count=items)
+        return HttpResponse(
+            f"<h1>{self.message_text}</h1>"
+            f"\n<h2>{products_line}</h2>"
+        )
 
 
 class AboutMeView(TemplateView):

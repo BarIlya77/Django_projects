@@ -1,25 +1,33 @@
 {% extends 'shopapp/base.html' %}
 
+{% load i18n %}
+
 {% block title %}
-  Shop Index
+  {% translate 'Shop Index' %}
 {% endblock %}
 
 
 {% block body %}
-  <h1>Hello Shop Index!</h1>
+  <h1>{% translate 'Hello Shop Index' %}!</h1>
 
   <div>
     <ul>
       {% for name, price in products %}
         <li>{{ name }} ({{ name|length }}) for ${{ price }}</li>
         {% if name|length_is:'7' %}
-          <span>Lucky product!</span>
+          <span>{% translate 'Lucky product' %}!</span>
         {% endif %}
       {% empty %}
-        No products here
+        {% translate 'No products here' %}
       {% endfor %}
 
     </ul>
+  </div>
+
+  <div>
+  <strong>
+      You have {{ items }} item{{ items|pluralize }}
+  </strong>
   </div>
 
   <div>

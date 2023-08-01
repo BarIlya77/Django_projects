@@ -5,9 +5,10 @@ from django.shortcuts import render, reverse
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
-from .models import Product, Order
+from .forms import ProductForm
+from .models import Product, Order, ProductImage
 
 
 class ShopIndexView(View):
@@ -20,13 +21,15 @@ class ShopIndexView(View):
         context = {
             "time_running": default_timer(),
             "products": products,
+            'items': 5
         }
         return render(request, 'shopapp/shop-index.html', context=context)
 
 
 class ProductDetailsView(DetailView):
     template_name = "shopapp/products-details.html"
-    model = Product
+    # model = Product
+    queryset = Product.objects.prefetch_related("images")
     context_object_name = "product"
 
 
@@ -39,20 +42,31 @@ class ProductsListView(ListView):
 
 class ProductCreateView(CreateView):
     model = Product
-    fields = "name", "price", "description", "discount"
+    fields = "name", "price", "description", "discount", "preview"
     success_url = reverse_lazy("shopapp:products_list")
 
 
 class ProductUpdateView(UpdateView):
     model = Product
-    fields = "name", "price", "description", "discount"
+    # fields = "name", "price", "description", "discount", "preview"
     template_name_suffix = "_update_form"
+    form_class = ProductForm
 
     def get_success_url(self):
         return reverse(
             "shopapp:product_details",
             kwargs={"pk": self.object.pk},
         )
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        for image in form.files.getlist("images"):
+            ProductImage.objects.create(
+                product=self.object,
+                image=image,
+            )
+
+        return response
 
 
 class ProductDeleteView(DeleteView):
@@ -85,7 +99,7 @@ class OrderDetailView(PermissionRequiredMixin, DetailView):
 
 class ProductsDataExportView(View):
     def get(self, request: HttpRequest) -> JsonResponse:
-        products = Product.objects.order_by("pk").all()
+        products = Product.objects.order_by('pk').all()
         products_data = [
             {
                 "pk": product.pk,
@@ -96,21 +110,3 @@ class ProductsDataExportView(View):
             for product in products
         ]
         return JsonResponse({"products": products_data})
-
-
-class OrdersDataExportView(UserPassesTestMixin, View):
-    def test_func(self):
-        return self.request.user.is_staff
-    def get(self, request: HttpRequest) -> JsonResponse:
-        orders = Order.objects.all()
-        orders_data = [
-            {# ID заказа, адрес, промокод, ID пользователя, список ID продуктов
-                'ID': order.id,
-                'address': order.delivery_address,
-                'promo': order.promocode,
-                'user': order.user_id,
-                'products': order.products
-            }
-            for order in orders
-        ]
-        return JsonResponse({'orders': orders_data})

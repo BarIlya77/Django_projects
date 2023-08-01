@@ -16,6 +16,7 @@ from .views import (
     UserInfoView,
     UserUpdateView,
     PhotoUpdateView,
+    HelloView,
 )
 
 app_name = "myauth"
@@ -31,9 +32,9 @@ urlpatterns = [
         name="login",
     ),
     # path("logout/", logout_view, name="logout"),
+    path("hello/", HelloView.as_view(), name="hello"),
     path("users/", UsersListView.as_view(), name="users_list"),
     path("logout/", MyLogoutView.as_view(), name="logout"),
-    # path("about-me/", AboutMeView.as_view(), name="about-me"),
     path("about-me/", AboutMeView.as_view(), name="about-me"),
     # path("about-me/<int:user_id>/", AboutMeView.as_view(), name="about-me"),
     # path("about-me/<str:name>/", AboutMeView.as_view(), name="about-me"),
