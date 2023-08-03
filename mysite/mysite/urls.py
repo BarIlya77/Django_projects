@@ -22,6 +22,7 @@ from django.conf.urls.i18n import i18n_patterns
 urlpatterns = [
     # path('shop/', include('shopapp.urls')),
     # path('myauth/', include('myauth.urls')),
+    path('api/', include('myapiapp.urls')),
 ]
 
 urlpatterns += i18n_patterns(

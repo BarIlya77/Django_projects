@@ -10,6 +10,30 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from .forms import ProductForm
 from .models import Product, Order, ProductImage
 
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
+
+from .serializers import ProductSerializer, OrderSerializer
+
+
+class ProductViewSet(ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    filter_backends = [SearchFilter, DjangoFilterBackend, OrderingFilter, ]
+    search_fields = ['name', 'description', ]
+    ordering_fields = ['pk', 'name', 'description', 'price', 'discount', ]
+    filterset_fields = ['name', 'description', 'price', 'discount', 'archived', ]
+
+
+class OrderViewSet(ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    filter_backends = [SearchFilter, DjangoFilterBackend, OrderingFilter, ]
+    search_fields = ['delivery_address', 'created_at', 'user', 'products', ]
+    ordering_fields = ['pk', 'delivery_address', 'created_at', 'user', ]
+    filterset_fields = ['delivery_address', 'promocode', 'created_at', 'user', 'products', ]
+
 
 class ShopIndexView(View):
     def get(self, request: HttpRequest) -> HttpResponse:
