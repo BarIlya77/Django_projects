@@ -58,11 +58,11 @@ class ProductViewSet(ModelViewSet):
         description="Retrieves **product**, return 404 if not found",
         responses={
             200: ProductSerializer,
-            404: OpenApiResponse(descripton="Empty response, product by ID not found")
-        }
+            404: OpenApiResponse(description="Empty response, product by ID not found"),
+        },
     )
     def retrieve(self, *args, **kwargs):
-        return super().retrieve(self, *args, **kwargs)
+        return super().retrieve(*args, **kwargs)
 
 
 class ShopIndexView(View):
