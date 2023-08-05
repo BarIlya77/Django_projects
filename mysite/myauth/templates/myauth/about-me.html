@@ -13,18 +13,8 @@
     <p>First name: {{ user.first_name }}</p>
     <p>Last name: {{ user.last_name }}</p>
     <p>Email: {{ user.email }}</p>
-    <p>PK: {{ user.pk }}</p>
-    <p>Profile PK: {{ user.profile.pk }}</p>
     <p>Bio: {{ user.profile.bio }}</p>
-      {% if user.profile.avatar %}
-          <img src="{{ user.profile.avatar.url }}" alt="{{ user.profile.avatar.name }}" height="300">
-      {% else %}
-          <h2>No avatar loaded!</h2>
-      {% endif %}
   {% else %}
     <h2>User is anonymous</h2>
   {% endif %}
-  <div>
-    <a href="{% url 'myauth:photo-update' %}">Update my photo</a>
-  </div>
 {% endblock %}

@@ -1,5 +1,4 @@
 from django.urls import path, include
-
 from rest_framework.routers import DefaultRouter
 
 from .views import (
@@ -13,13 +12,12 @@ from .views import (
     ProductDeleteView,
     ProductsDataExportView,
     ProductViewSet,
-    OrderViewSet
 )
 
 app_name = "shopapp"
+
 routers = DefaultRouter()
-routers.register('products', ProductViewSet)
-routers.register('orders', OrderViewSet)
+routers.register("products", ProductViewSet)
 
 urlpatterns = [
     path("", ShopIndexView.as_view(), name="index"),

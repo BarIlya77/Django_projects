@@ -4,7 +4,6 @@ from django.http import HttpRequest
 
 from .models import Product, Order, ProductImage
 from .admin_mixins import ExportAsCSVMixin
-from django.utils.translation import gettext_lazy as _
 
 
 class OrderInline(admin.TabularInline):

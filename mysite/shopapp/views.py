@@ -1,3 +1,9 @@
+"""
+В этом модуле лежат различные наборы представлений.
+
+Разные view интернет-магазина: по таварам, заказам и т.д.
+"""
+
 from timeit import default_timer
 
 from django.http import HttpResponse, HttpRequest, HttpResponseRedirect, JsonResponse
@@ -6,33 +12,57 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.viewsets import ModelViewSet
+from django_filters.rest_framework import DjangoFilterBackend
 
 from .forms import ProductForm
 from .models import Product, Order, ProductImage
+from .serializers import ProductSerializer
 
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.filters import SearchFilter, OrderingFilter
-from django_filters.rest_framework import DjangoFilterBackend
-
-from .serializers import ProductSerializer, OrderSerializer
+from drf_spectacular.utils import extend_schema, OpenApiResponse
 
 
+@extend_schema(
+    summary="Get one product by ID",
+    description="Product Views CRUD"
+)
 class ProductViewSet(ModelViewSet):
+    """
+    Набор представлений для действий над Product
+    Полный CRUD для сущностей товара
+    """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    filter_backends = [SearchFilter, DjangoFilterBackend, OrderingFilter, ]
-    search_fields = ['name', 'description', ]
-    ordering_fields = ['pk', 'name', 'description', 'price', 'discount', ]
-    filterset_fields = ['name', 'description', 'price', 'discount', 'archived', ]
+    filter_backends = [
+        SearchFilter,
+        DjangoFilterBackend,
+        OrderingFilter,
+    ]
+    search_fields = ["name", "description"]
+    filterset_fields = [
+        "name",
+        "description",
+        "price",
+        "discount",
+        "archived",
+    ]
+    ordering_fields = [
+        "name",
+        "price",
+        "discount",
+    ]
 
-
-class OrderViewSet(ModelViewSet):
-    queryset = Order.objects.all()
-    serializer_class = OrderSerializer
-    filter_backends = [SearchFilter, DjangoFilterBackend, OrderingFilter, ]
-    search_fields = ['delivery_address', 'created_at', 'user', 'products', ]
-    ordering_fields = ['pk', 'delivery_address', 'created_at', 'user', ]
-    filterset_fields = ['delivery_address', 'promocode', 'created_at', 'user', 'products', ]
+    @extend_schema(
+        summary="Get one product by ID",
+        description="Retrieves **product**, return 404 if not found",
+        responses={
+            200: ProductSerializer,
+            404: OpenApiResponse(descripton="Empty response, product by ID not found")
+        }
+    )
+    def retrieve(self, *args, **kwargs):
+        return super().retrieve(self, *args, **kwargs)
 
 
 class ShopIndexView(View):
@@ -45,7 +75,6 @@ class ShopIndexView(View):
         context = {
             "time_running": default_timer(),
             "products": products,
-            'items': 5
         }
         return render(request, 'shopapp/shop-index.html', context=context)
 
