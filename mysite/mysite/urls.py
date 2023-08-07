@@ -21,7 +21,7 @@ from django.urls import path, include
 from drf_spectacular.views import SpectacularRedocView, SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
-    path('admin/doc', include('django.contrib.admindocs.urls')),
+    path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
     path('shop/', include('shopapp.urls')),
     path('myauth/', include('myauth.urls')),
